@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{302748BC-E1F3-4095-ABFD-60D5AEB02531}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebDescent</RootNamespace>
+    <AssemblyName>WebDescent</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <TypeScriptToolsVersion>1.7</TypeScriptToolsVersion>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="index.css" />
+    <Content Include="Scripts\audionode.min.js">
+      <DependentUpon>audionode.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Class.js" />
+    <Content Include="Scripts\audionode.js" />
+    <Content Include="Scripts\Class.min.js">
+      <DependentUpon>Class.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\game-shim.min.js">
+      <DependentUpon>game-shim.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\glUtils.js" />
+    <Content Include="index.html" />
+    <Content Include="D2DEMO.HAM" />
+    <Content Include="D2DEMO.HOG" />
+    <Content Include="D2DEMO.PIG" />
+    <Content Include="Scripts\glUtils.min.js">
+      <DependentUpon>glUtils.js</DependentUpon>
+    </Content>
+    <Content Include="packages.config" />
+    <None Include="Scripts\jquery-2.2.0.intellisense.js" />
+    <Content Include="Scripts\jquery-2.2.0.js" />
+    <Content Include="Scripts\jquery-2.2.0.min.js" />
+    <Content Include="Scripts\jquery.ajax-progress.js" />
+    <Content Include="Scripts\jquery.ajax-progress.min.js">
+      <DependentUpon>jquery.ajax-progress.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Stats.js" />
+    <Content Include="Scripts\Stats.min.js">
+      <DependentUpon>Stats.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\sylvester.src.js" />
+    <Content Include="Scripts\sylvester.src.min.js">
+      <DependentUpon>sylvester.src.js</DependentUpon>
+    </Content>
+    <Content Include="Web.config" />
+    <Content Include="Typescript\webgl.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\audionode.min.js.map">
+      <DependentUpon>audionode.min.js</DependentUpon>
+    </Content>
+    <Content Include="Shaders\single.fs.glsl" />
+    <Content Include="Shaders\single.vs.glsl" />
+    <Content Include="Shaders\lit.fs.glsl" />
+    <Content Include="Shaders\lit.vs.glsl" />
+    <Content Include="Shaders\flat.fs.glsl" />
+    <Content Include="Shaders\flat.vs.glsl" />
+    <Content Include="Shaders\billboard.fs.glsl" />
+    <Content Include="Shaders\billboard.vs.glsl" />
+    <Content Include="Shaders\billboard-x.fs.glsl" />
+    <Content Include="Shaders\billboard-x.vs.glsl" />
+    <None Include="Typescript\BinaryHeap.ts" />
+    <Content Include="Scripts\Class.min.js.map">
+      <DependentUpon>Class.min.js</DependentUpon>
+    </Content>
+    <None Include="Typescript\Controls.ts" />
+    <None Include="Typescript\DataStream.ts" />
+    <None Include="Typescript\DataView.ts" />
+    <Content Include="Scripts\glUtils.min.js.map">
+      <DependentUpon>glUtils.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\game-shim.js" />
+    <Content Include="Scripts\game-shim.min.js.map">
+      <DependentUpon>game-shim.min.js</DependentUpon>
+    </Content>
+    <None Include="Typescript\Ham.ts" />
+    <None Include="Typescript\Hog.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+    <None Include="Shaders\double.fs.glsl" />
+    <None Include="Shaders\double.vs.glsl" />
+    <TypeScriptCompile Include="Typescript\index.ts" />
+    <Content Include="Scripts\jquery.ajax-progress.min.js.map">
+      <DependentUpon>jquery.ajax-progress.min.js</DependentUpon>
+    </Content>
+    <None Include="Typescript\Level.ts" />
+    <None Include="Typescript\Math.ts" />
+    <None Include="Typescript\Object.ts" />
+    <None Include="Typescript\Pig.ts" />
+    <None Include="Typescript\Player.ts" />
+    <None Include="Typescript\Sound.ts" />
+    <Content Include="Scripts\sylvester.src.min.js.map">
+      <DependentUpon>sylvester.src.min.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Stats.min.js.map">
+      <DependentUpon>Stats.min.js</DependentUpon>
+    </Content>
+    <None Include="Typescript\Test.d.ts" />
+    <TypeScriptCompile Include="Typescript\Visibility_worker.ts" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptSourceMap>False</TypeScriptSourceMap>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptOutDir>Compiled</TypeScriptOutDir>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptModuleKind>none</TypeScriptModuleKind>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptOutFile />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>51224</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:51225/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>http://localhost:51224/</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
