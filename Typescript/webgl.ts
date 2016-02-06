@@ -559,7 +559,7 @@ function webGLStart()
 	var canvas = <HTMLCanvasElement>$("#canvas")[0];
 	gl = <WebGLRenderingContext>canvas.getContext("experimental-webgl");
 
-	gl.clearColor(0.0, 0.0, 0.125, 1.0);
+	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clearDepth(0.0);
 
 	gl.frontFace(gl.CW);
@@ -571,8 +571,5 @@ function webGLStart()
 
 	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-	return initShaders().done(() =>
-	{
-		updateViewport();
-	});
+	return initShaders();
 }

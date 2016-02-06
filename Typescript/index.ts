@@ -76,32 +76,44 @@ $(document).ready(function ()
 		});
 	}
 
+	$.ajaxPrefilter(function (options, originalOptions, jqXHR)
+	{
+		options.xhrFields = $.extend(options.xhrFields, {}, {
+			onprogress: function (e: ProgressEvent)
+			{
+				if (e.lengthComputable)
+				{
+					var deferred: JQueryDeferred<number> = (<any>jqXHR).deferred;
+					if (deferred)
+						deferred.notify(Math.floor(e.loaded * 100 / e.total));
+				}
+			}
+		});
+	});
+
 	$.when(
-		loadBuffer("D2DEMO.PIG", "prog1"),
-		loadBuffer("D2DEMO.HOG", "prog2"),
-		loadBuffer("D2DEMO.HAM", "prog3")
+		loadBuffer("data/D2DEMO.PIG", "prog1"),
+		loadBuffer("data/D2DEMO.HOG", "prog2"),
+		loadBuffer("data/D2DEMO.HAM", "prog3")
 	).then((pigData: any[], hogData: any[], hamData: any[]) =>
 	{
 		_ham = new Ham().load(hamData[0]);
 		_pig = new Pig().load(pigData[0]);
 		_hog = new Hog().load(hogData[0]);
 
-		$("#canvas").show();
-		$("#loader").hide();
-
 	}).then(webGLStart).then(() =>
 	{
-		function start()
-		{
+		if (window.location.host.indexOf('localhost') >= 0)
 			onDataLoaded();
+		else
+		{
+			_ham.playSound(114);
+
+			$("#start")
+				.attr('disabled', null)
+				.text('Launch')
+				.click(onDataLoaded);
 		}
-
-		$("#start")
-			.attr('disabled', null)
-			.text('Launch')
-			.click(start);
-
-		start();
 	});
 });
 
@@ -219,6 +231,11 @@ function createProxy(obj: any, rgMaps: any[][])
 
 function onDataLoaded()
 {
+	$("#canvas").show();
+	$("#loader").hide();
+
+	updateViewport();
+
 	window.oncontextmenu = function () { return false; };
 
 	/*
@@ -381,7 +398,7 @@ function onDataLoaded()
 			if (console.profile)
 				console.profile();
 			var startTime = new Date().getTime();
-
+	
 			//for (var iCube = 0; iCube < Math.min (100, level.cubes.length); ++iCube)
 			for (var iCube = level.cubes.length; iCube--;)
 			{
@@ -389,7 +406,7 @@ function onDataLoaded()
 				if (cube.index >= 0)
 					cube.getVisibleNeighbors();
 			}
-
+	
 			if (console.profileEnd)
 				console.profileEnd();
 			console.log((new Date().getTime() - startTime) / 1000);
@@ -420,13 +437,13 @@ function onDataLoaded()
 		{
 			var unpacked = [];
 			level.rgVertices.forEach(function (e) { e.pushTo(unpacked); });
-
+	
 			var texVertexPositions = createTexture();
-
+	
 			gl.bindTexture(gl.TEXTURE_2D, texVertexPositions);
 			gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, level.rgVertices.length, 1, 0, gl.RGB, gl.FLOAT, new Float32Array(unpacked));
-
+	
 			bindTexture(3, texVertexPositions);
 			gl.uniform1i(programDouble.sampVertexPositions, 3);
 		}
@@ -446,9 +463,9 @@ function onDataLoaded()
 		viewer.movementType = MovementTypes.PHYSICS;
 		viewer.controls = Keys;
 
-		var flash = viewer.cube.createExplosion(0, viewer.pos.addScale(viewer.orient._[2], viewer.size * .8), viewer.size, KnownVClips.PLAYER_APPEARANCE);
+		var flash = viewer.cube.createExplosion(0, viewer.pos.addScale(viewer.orient._[2], viewer.size * 0.8), viewer.size, KnownVClips.PLAYER_APPEARANCE);
 		flash.orient = viewer.orient;
-		//_ham.playSound(_ham.rgVClips[KnownVClips.PLAYER_APPEARANCE].sound_num);
+		_ham.playSound(_ham.rgVClips[KnownVClips.PLAYER_APPEARANCE].sound_num);
 
 		var iWeapon = 0;
 		var timeFire = 0;
@@ -623,27 +640,27 @@ function onDataLoaded()
 					_iStepLast = _iTriViewLast = null;
 					_rgCubesDebug = rgCubes;
 					_cubeDebug = cubeInside;
-
+	
 					_stackDebug = [];
 					_stepsDebug = _cubeDebug.rgDebug;
-
+	
 					_rgVisibleCubesDebug = rgVisibleCubes;
 					_rgVisibleSidesDebug = rgVisibleSides;
 					_rgVisibleSidesBlendedDebug = rgVisibleSidesBlended;
 				}
 			}
-
+	
 			if (_cubeDebug)
 			{
 				rgVisibleCubes = _rgVisibleCubesDebug;
 				rgVisibleSides = _rgVisibleSidesDebug;
 				rgVisibleSidesBlended = _rgVisibleSidesBlendedDebug;
-
+	
 				if (_iStep < 0)
 					_iStep = 0;
 				else if (_iStep >= _stepsDebug.length)
 					_iStep = _stepsDebug.length - 1;
-
+	
 				if (Keys.stepDown && _stackDebug.length > 0)
 				{
 					_stepsDebug = _stackDebug.pop();
@@ -658,17 +675,17 @@ function onDataLoaded()
 					{
 						_stepsDebug._iStep = _iStep;
 						_stackDebug.push(_stepsDebug);
-
+	
 						_stepsDebug = stepDebug.children;
 						_iStep = _stepsDebug._iStep || 0;
 						_iStepLast = undefined;
 					}
 				}
-
+	
 				if (_iStepLast != _iStep)
 				{
 					_iStepLast = _iStep;
-
+	
 					var step = _stepsDebug[_iStep];
 					if (step)
 					{
@@ -835,7 +852,7 @@ function onDataLoaded()
 					{
 						var start = path[iStart];
 						optimized.push(start);
-
+	
 						var iEnd = iStart + 2;
 						while (iEnd < path.length)
 						{
@@ -851,7 +868,7 @@ function onDataLoaded()
 						iStart = iEnd - 1;
 					}
 					optimized.push(path[path.length - 1]);
-
+	
 					renderPath(optimized);
 				}
 			}
@@ -905,13 +922,13 @@ function onDataLoaded()
 			{
 				gl.disable(gl.BLEND);
 				gl.disable(gl.DEPTH_TEST);
-
+	
 				gl.disable(gl.CULL_FACE);
-
+	
 				useProgram(programFlat);
-
+	
 				var step = _stepsDebug[_iStep];
-
+	
 				_stepsDebug._iStep = _iStep;
 				_stackDebug.push(_stepsDebug);
 				for (var i = _stackDebug.length; i--;)
@@ -919,10 +936,10 @@ function onDataLoaded()
 					var stepsRender = _stackDebug[i];
 					var stepRender = stepsRender[stepsRender._iStep];
 					var sideOther = stepRender.side;
-
+	
 					if (!sideOther.bufferVertexTextureBrightness)
 						sideOther.createBuffers();
-
+	
 					loadAttribBuffer(programFlat.aVertexPosition, sideOther.bufferVertexPosition);
 					if (i == 0)
 						gl.uniform4f(programFlat.color, 1, .5, 1, 0.3);
@@ -933,39 +950,39 @@ function onDataLoaded()
 					gl.drawArrays(gl.TRIANGLE_FAN, 0, sideOther.bufferVertexPosition.numItems);
 				}
 				_stackDebug.pop();
-
+	
 				gl.disable(gl.DEPTH_TEST);
-
+	
 				if (step.extents)
 				{
 					useProgram(programBillboard);
 					loadAttribBuffer(programBillboard.aVertexPosition, programBillboard.bufferVertexPosition);
-
+	
 					for (var i = 4; i--;)
 					{
 						var extent = step.extents[i];
 						if (extent)
 						{
 							gl.uniform3f(programBillboard.pos, extent.x, extent.y, extent.z);
-
+	
 							var tex = _pig.loadBitmap(i + 1, 1);
 							var bmp = tex.bmp;
 							bindTexture(1, tex)
 							gl.uniform2f(programBillboard.sizeTexture, bmp.width, bmp.height);
 							gl.uniform1f(programBillboard.scale, 2 / Math.max(bmp.width, bmp.height));
-
+	
 							gl.drawArrays(gl.TRIANGLE_FAN, 0, programBillboard.bufferVertexPosition.numItems);
 						}
 					}
-
+	
 				}
-
+	
 				if (step.rgEdges)
 				{
 					useProgram(programFlat);
-
+	
 					gl.lineWidth(30);
-
+	
 					for (var iEdge = 4; iEdge--;)
 					{
 						var bufferVertexPositionEdge1 = createBuffer(step.rgEdges[iEdge].flatten(), 3);
@@ -988,12 +1005,12 @@ function onDataLoaded()
 						gl.drawArrays(gl.LINES, 0, 2);
 					}
 				}
-
+	
 				gl.enable(gl.DEPTH_TEST);
-
+	
 				if (step.callback && Keys.mapBindings["debug"].pressed)
 					step.callback();
-
+	
 				gl.enable(gl.CULL_FACE);
 			}
 			*/

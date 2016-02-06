@@ -74,13 +74,13 @@
     </Content>
     <Content Include="Scripts\glUtils.js" />
     <Content Include="index.html" />
-    <Content Include="D2DEMO.HAM" />
-    <Content Include="D2DEMO.HOG" />
-    <Content Include="D2DEMO.PIG" />
     <Content Include="Scripts\glUtils.min.js">
       <DependentUpon>glUtils.js</DependentUpon>
     </Content>
     <Content Include="packages.config" />
+    <Content Include="data\D2DEMO.HAM" />
+    <Content Include="data\D2DEMO.HOG" />
+    <Content Include="data\D2DEMO.PIG" />
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.0.js" />
     <Content Include="Scripts\jquery-2.2.0.min.js" />
@@ -199,7 +199,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51224</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:51225/</IISUrl>
+          <IISUrl>http://localhost:51226/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://localhost:51224/</CustomServerUrl>

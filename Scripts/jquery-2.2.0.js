@@ -8414,6 +8414,8 @@ jQuery.extend( {
 			jqXHR = {
 				readyState: 0,
 
+				deferred: deferred,
+
 				// Builds headers hashtable if needed
 				getResponseHeader: function( key ) {
 					var match;
