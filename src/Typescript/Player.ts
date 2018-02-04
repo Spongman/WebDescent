@@ -1,65 +1,64 @@
-﻿/// <reference path="DataView.ts" />
+/// <reference path="DataView.ts" />
 /// <reference path="DataStream.ts" />
 
 /// <reference path="Math.ts" />
 /// <reference path="webgl.ts" />
+/// <reference path="PowerupTypes.ts" />
 "use strict";
 
-var MAX_ENERGY = 200;
-var MAX_SHIELDS = 200;
+const MAX_ENERGY = 200;
+const MAX_SHIELDS = 200;
 
-var VULCAN_AMMO_MAX = (392 * 4);
-var VULCAN_WEAPON_AMMO_AMOUNT = 196;
-var VULCAN_AMMO_AMOUNT = (49 * 2);
-var GAUSS_WEAPON_AMMO_AMOUNT = 392;
+const VULCAN_AMMO_MAX = (392 * 4);
+const VULCAN_WEAPON_AMMO_AMOUNT = 196;
+const VULCAN_AMMO_AMOUNT = (49 * 2);
+const GAUSS_WEAPON_AMMO_AMOUNT = 392;
 
-var _difficultyLevel = 0;
+const _difficultyLevel = 0;
 
-
-enum PlayerFlags
-{
-	INVULNERABLE = (1<<0),	// Player is invincible
-	BLUE_KEY     = (1<<1),	// Player has blue key
-	RED_KEY      = (1<<2),	// Player has red key
-	GOLD_KEY     = (1<<3),	// Player has gold key
-	FLAG         = (1<<4),	// Player has his team's flag
-	UNUSED       = (1<<5),	//
-	MAP_ALL      = (1<<6),	// Player can see unvisited areas on map
-	AMMO_RACK    = (1<<7),	// Player has ammo rack
-	CONVERTER    = (1<<8),	// Player has energy->shield converter
-	QUAD_LASERS  = (1<<9),	// Player shoots 4 at once
-	CLOAKED      = (1<<10),	// Player is cloaked for awhile
-	AFTERBURNER  = (1<<11),	// Player's afterburner is engaged
-	HEADLIGHT    = (1<<12),	// Player has headlight boost
-	HEADLIGHT_ON = (1<<13),	// is headlight on or off?
+enum PlayerFlags {
+	INVULNERABLE = (1 << 0),	// Player is invincible
+	BLUE_KEY     = (1 << 1),	// Player has blue key
+	RED_KEY      = (1 << 2),	// Player has red key
+	GOLD_KEY     = (1 << 3),	// Player has gold key
+	FLAG         = (1 << 4),	// Player has his team's flag
+	UNUSED       = (1 << 5),	//
+	MAP_ALL      = (1 << 6),	// Player can see unvisited areas on map
+	AMMO_RACK    = (1 << 7),	// Player has ammo rack
+	CONVERTER    = (1 << 8),	// Player has energy->shield converter
+	QUAD_LASERS  = (1 << 9),	// Player shoots 4 at once
+	CLOAKED      = (1 << 10),	// Player is cloaked for awhile
+	AFTERBURNER  = (1 << 11),	// Player's afterburner is engaged
+	HEADLIGHT    = (1 << 12),	// Player has headlight boost
+	HEADLIGHT_ON = (1 << 13),	// is headlight on or off?
 }
-class Player
-{
-	score:number;
-	lives:number;
-	level:number;
-	keys:number;
-	shields:number;
-	energy:number;
-	laser_level:number;
-	flags:PlayerFlags;
+class Player {
 
-	primary_weapon:number;
-	primary_weapon_flags:number;
-	primary_ammo:number[];
+	static secondary_ammo_max = [20, 10, 10, 5, 5, 20, 20, 15, 10, 10];
 
-	vulcan_ammo:number;
+	score: number;
+	lives: number;
+	level: number;
+	keys: number;
+	shields: number;
+	energy: number;
+	laser_level: number;
+	flags: PlayerFlags;
 
-	secondary_weapon:number;
-	secondary_weapon_flags:number;
-	secondary_ammo:number[];
+	primary_weapon: number;
+	primary_weapon_flags: number;
+	primary_ammo: number[];
 
-	constructor ()
-	{
+	vulcan_ammo: number;
+
+	secondary_weapon: number;
+	secondary_weapon_flags: number;
+	secondary_ammo: number[];
+
+	constructor() {
 		this.reset();
 	}
-	reset ()
-	{
+	reset() {
 		this.score = 0;
 		this.lives = 3;
 		this.level = 1;
@@ -79,19 +78,18 @@ class Player
 		this.secondary_weapon_flags = 0;
 		this.secondary_ammo = [];
 	}
-	pickUpPowerup (idPowerupType:PowerupTypes)
-	{
-		var fAlreadyHave = false;
+	pickUpPowerup(idPowerupType: PowerupTypes) {
+		let fAlreadyHave = false;
 
-		if (PowerupPrimaryFlags[idPowerupType])
+		if (PowerupPrimaryFlags[idPowerupType]) {
 			fAlreadyHave = !!(this.primary_weapon_flags & PowerupPrimaryFlags[idPowerupType]);
-		else if (PowerupSecondaryFlags[idPowerupType])
+		} else if (PowerupSecondaryFlags[idPowerupType]) {
 			fAlreadyHave = !!(this.secondary_weapon_flags & PowerupSecondaryFlags[idPowerupType]);
-		else if (PowerupPlayerFlags[idPowerupType])
+							} else if (PowerupPlayerFlags[idPowerupType]) {
 			fAlreadyHave = !!(this.flags & PowerupPlayerFlags[idPowerupType]);
+							}
 
-		switch (idPowerupType)
-		{
+		switch (idPowerupType) {
 			case PowerupTypes.EXTRA_LIFE:
 				this.lives++;
 				return true;
@@ -103,15 +101,13 @@ class Player
 				return this.pickUpShields();
 
 			case PowerupTypes.LASER:
-				if (this.laser_level < MAX_LASER_LEVEL)
-				{
+				if (this.laser_level < MAX_LASER_LEVEL) {
 					this.laser_level++;
 					return true;
 				}
 				break;
 
-			//case PowerupTypes.SUPER_LASER:
-
+			// case PowerupTypes.SUPER_LASER:
 
 			case PowerupTypes.SPREADFIRE_WEAPON:
 			case PowerupTypes.PLASMA_WEAPON:
@@ -132,8 +128,7 @@ class Player
 			case PowerupTypes.KEY_BLUE:
 			case PowerupTypes.KEY_RED:
 			case PowerupTypes.KEY_GOLD:
-				if (!fAlreadyHave)
-				{
+				if (!fAlreadyHave) {
 					this.flags |= PowerupPlayerFlags[idPowerupType];
 					return true;
 				}
@@ -166,8 +161,9 @@ class Player
 			case PowerupTypes.AFTERBURNER:
 			case PowerupTypes.INVULNERABILITY:
 			case PowerupTypes.CLOAK:
-				if (fAlreadyHave)
+				if (fAlreadyHave) {
 					return this.pickUpEnergy();
+				}
 				this.flags |= PowerupPlayerFlags[idPowerupType];
 				return true;
 
@@ -184,101 +180,95 @@ class Player
 
 		return false;
 	}
-	pickUpEnergy ()
-	{
-		if (this.energy >= MAX_ENERGY)
+	pickUpEnergy() {
+		if (this.energy >= MAX_ENERGY) {
 			return false;
+		}
 
-		var boost = 3 * (NDL - _difficultyLevel + 1);
-		if (_difficultyLevel === 0)
+		let boost = 3 * (NDL - _difficultyLevel + 1);
+		if (_difficultyLevel === 0) {
 			boost += boost / 2;
+		}
 		this.energy = Math.min(this.energy + boost, MAX_ENERGY);
 		return true;
 	}
-	pickUpShields ()
-	{
-		if (this.shields >= MAX_SHIELDS)
+	pickUpShields() {
+		if (this.shields >= MAX_SHIELDS) {
 			return false;
+		}
 
-		var boost = 3 + 3 * (NDL - _difficultyLevel);
-		if (_difficultyLevel === 0)
-			boost += boost/2;
+		let boost = 3 + 3 * (NDL - _difficultyLevel);
+		if (_difficultyLevel === 0) {
+			boost += boost / 2;
+		}
 		this.shields = Math.min(this.shields + boost, MAX_SHIELDS);
 		return true;
 	}
-	pickUpPrimary (idPowerupType:PowerupTypes)
-	{
-		var iPrimary = PowerupPrimaryFlags[idPowerupType];
-		if (this.primary_weapon_flags & (1 << iPrimary))
+	pickUpPrimary(idPowerupType: PowerupTypes) {
+		const iPrimary = PowerupPrimaryFlags[idPowerupType];
+		if (this.primary_weapon_flags & (1 << iPrimary)) {
 			return this.pickUpEnergy();
+		}
 
 		this.primary_weapon_flags |= (1 << iPrimary);
 		return true;
 	}
-	pickUpSecondary (idPowerupType:PowerupTypes, count:number)
-	{
-		var iSecondary = PowerupPrimaryFlags[idPowerupType];
-		if (this.secondary_weapon_flags & (1 << iSecondary))
-		{
-			var max = Player.secondary_ammo_max[iSecondary];
-			if (this.flags & PlayerFlags.AMMO_RACK)
+	pickUpSecondary(idPowerupType: PowerupTypes, count: number) {
+		const iSecondary = PowerupPrimaryFlags[idPowerupType];
+		if (this.secondary_weapon_flags & (1 << iSecondary)) {
+			let max = Player.secondary_ammo_max[iSecondary];
+			if (this.flags & PlayerFlags.AMMO_RACK) {
 				max *= 2;
+			}
 
-			if (this.secondary_ammo[iSecondary] >= max)
+			if (this.secondary_ammo[iSecondary] >= max) {
 				return false;
+			}
 
 			this.secondary_ammo[iSecondary] = Math.min (max, this.secondary_ammo[iSecondary] + count);
-		}
-		else
-		{
+		} else {
 			this.secondary_weapon_flags |= (1 << iSecondary);
 			this.secondary_ammo[iSecondary] = 0;
 		}
 		return true;
 	}
-	pickUpVulcan ()
-	{
+	pickUpVulcan() {
 		_player.primary_weapon_flags |= (1 << PrimaryWeaponIndex.VULCAN);
 		return this.pickUpVulcanAmmo(VULCAN_WEAPON_AMMO_AMOUNT);
 	}
-	pickUpGauss ()
-	{
+	pickUpGauss() {
 		_player.primary_weapon_flags |= (1 << PrimaryWeaponIndex.GAUSS);
 		return this.pickUpVulcanAmmo(GAUSS_WEAPON_AMMO_AMOUNT);
 	}
-	pickUpVulcanAmmo (count = VULCAN_AMMO_AMOUNT)
-	{
-		if (this.vulcan_ammo >= VULCAN_AMMO_MAX)
+	pickUpVulcanAmmo(count = VULCAN_AMMO_AMOUNT) {
+		if (this.vulcan_ammo >= VULCAN_AMMO_MAX) {
 			return false;
+		}
 
 		this.vulcan_ammo = Math.min(this.vulcan_ammo + count, VULCAN_AMMO_MAX);
 		return true;
 	}
-	hasKeys (doorKeys:DoorKeys)
-	{
-		var flags = this.flags;
+	hasKeys(doorKeys: DoorKeys) {
+		const flags = this.flags;
 
-		if ((doorKeys & DoorKeys.BLUE) && !(flags & PlayerFlags.BLUE_KEY))
+		if ((doorKeys & DoorKeys.BLUE) && !(flags & PlayerFlags.BLUE_KEY)) {
 			return false;
+		}
 
-		if ((doorKeys & DoorKeys.RED) && !(flags & PlayerFlags.RED_KEY))
+		if ((doorKeys & DoorKeys.RED) && !(flags & PlayerFlags.RED_KEY)) {
 			return false;
+		}
 
-		if ((doorKeys & DoorKeys.GOLD) && !(flags & PlayerFlags.GOLD_KEY))
+		if ((doorKeys & DoorKeys.GOLD) && !(flags & PlayerFlags.GOLD_KEY)) {
 			return false;
+		}
 
 		return true;
 	}
-	static secondary_ammo_max = [20, 10, 10, 5, 5, 20, 20, 15, 10, 10];
-
 }
-var _player = new Player();
+const _player = new Player();
 
-
-
-
-enum PrimaryWeaponIndex
-{
+enum PrimaryWeaponIndex {
 	LASER       = 0,
 	VULCAN      = 1,
 	SPREADFIRE  = 2,
@@ -290,9 +280,8 @@ enum PrimaryWeaponIndex
 	PHOENIX     = 8,
 	OMEGA       = 9,
 }
-var PowerupPrimaryFlags: { [index: number]: PrimaryWeaponIndex } = (function ()
-{
-	var rg: { [index: number]: PrimaryWeaponIndex } = {};
+const PowerupPrimaryFlags: { [index: number]: PrimaryWeaponIndex } = (() => {
+	const rg: { [index: number]: PrimaryWeaponIndex } = {};
 
 	rg[PowerupTypes.LASER] = PrimaryWeaponIndex.LASER;
 	rg[PowerupTypes.VULCAN_WEAPON] = PrimaryWeaponIndex.VULCAN;
@@ -309,9 +298,7 @@ var PowerupPrimaryFlags: { [index: number]: PrimaryWeaponIndex } = (function ()
 
 })();
 
-
-enum SecondaryWeaponIndex
-{
+enum SecondaryWeaponIndex {
 	CONCUSSION  = 0,
 	HOMING      = 1,
 	PROXIMITY   = 2,
@@ -323,9 +310,8 @@ enum SecondaryWeaponIndex
 	SMISSILE4   = 8,
 	SMISSILE5   = 9,
 }
-var PowerupSecondaryFlags: { [index: number]: SecondaryWeaponIndex } = (function ()
-{
-	var rg: { [index: number]: SecondaryWeaponIndex } = {};
+const PowerupSecondaryFlags: { [index: number]: SecondaryWeaponIndex } = (() => {
+	const rg: { [index: number]: SecondaryWeaponIndex } = {};
 
 	rg[PowerupTypes.MISSILE_1] = SecondaryWeaponIndex.CONCUSSION;
 	rg[PowerupTypes.MISSILE_4] = SecondaryWeaponIndex.CONCUSSION;
@@ -346,16 +332,15 @@ var PowerupSecondaryFlags: { [index: number]: SecondaryWeaponIndex } = (function
 	return rg;
 })();
 
-var PowerupPlayerFlags: { [index: number]: PlayerFlags } = (function ()
-{
-	var rg: { [index: number]: PlayerFlags } = {};
+const PowerupPlayerFlags: { [index: number]: PlayerFlags } = (() => {
+	const rg: { [index: number]: PlayerFlags } = {};
 
 	rg[PowerupTypes.INVULNERABILITY] = PlayerFlags.INVULNERABLE;
 	rg[PowerupTypes.KEY_BLUE] = PlayerFlags.BLUE_KEY;
 	rg[PowerupTypes.KEY_RED] = PlayerFlags.RED_KEY;
 	rg[PowerupTypes.KEY_GOLD] = PlayerFlags.GOLD_KEY;
-	//rg[PowerupTypes.] = PlayerFlags.FLAG;
-	//rg[PowerupTypes.] = PlayerFlags.UNUSED;
+	// rg[PowerupTypes.] = PlayerFlags.FLAG;
+	// rg[PowerupTypes.] = PlayerFlags.UNUSED;
 	rg[PowerupTypes.FULL_MAP] = PlayerFlags.MAP_ALL;
 	rg[PowerupTypes.AMMO_RACK] = PlayerFlags.AMMO_RACK;
 	rg[PowerupTypes.CONVERTER] = PlayerFlags.CONVERTER;

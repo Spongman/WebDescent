@@ -1,17 +1,16 @@
-﻿//// <reference path="WebAudio.d.ts" />
+//// <reference path="WebAudio.d.ts" />
 
 /// <reference path="DataView.ts" />
 /// <reference path="DataStream.ts" />
 /// <reference path="Math.ts" />
 /// <reference path="webgl.ts" />
-/// <reference path="Object.ts" />
+/// <reference path="Item.ts" />
 "use strict";
 
-var _audio: AudioContext;
-var _mainAudio: AudioNode;
+let _audio: AudioContext;
+let _mainAudio: AudioNode;
 
-class SoundFile
-{
+class SoundFile {
 	index: number;
 	name: string;
 	length: number;
@@ -21,50 +20,45 @@ class SoundFile
 	data: Uint8Array;
 	buffer: AudioBuffer;
 
-	load(stream:DataStream)
-	{
+	load(stream: DataStream) {
 		this.name = stream.getString(8);
 		this.length = stream.getUint32();
 		this.data_length = stream.getUint32();	// ?
 		this.offset = stream.getUint32();
 		return this;
 	}
-	getBuffer()
-	{
-		var buffer = this.buffer;
-		if (!buffer)
-		{
-			buffer = this.buffer = _audio.createBuffer(1, this.length, 22050/2);
-			//buffer.gain.value = 1;
-			var rgSamples = buffer.getChannelData(0);
-			var data = this.data;
-			for (var iSample = this.length; iSample--;)
-			{
-				//rgSamples[iSample] = data[iSample] * 2 / 255 - 1;
+	getBuffer() {
+		let buffer = this.buffer;
+		if (!buffer) {
+			buffer = this.buffer = _audio.createBuffer(1, this.length, 22050 / 2);
+			// buffer.gain.value = 1;
+			const rgSamples = buffer.getChannelData(0);
+			const data = this.data;
+			for (let iSample = this.length; iSample--;) {
+				// rgSamples[iSample] = data[iSample] * 2 / 255 - 1;
 				rgSamples[iSample] = data[iSample] / 255 - .5;
 			}
 		}
 		return buffer;
 	}
-	playObjectSound(obj?: object)
-	{
-		if (!_audio)
+	playObjectSound(obj: Item) {
+		if (!_audio) {
 			return;
-		var buffer = this.getBuffer();
-		var playingSound = new ObjectSound(buffer, obj);
+		}
+		const buffer = this.getBuffer();
+		const playingSound = new ItemSound(buffer, obj);
 		PlayingSound.add(playingSound);
 	}
-	playSound(pos?: Vec3)
-	{
-		if (!_audio)
+	playSound(pos?: Vec3) {
+		if (!_audio) {
 			return;
-		var buffer = this.getBuffer();
-		var playingSound = pos ? new PositionalSound(buffer, pos) : new PlayingSound(buffer);
+		}
+		const buffer = this.getBuffer();
+		const playingSound = pos ? new PositionalSound(buffer, pos) : new PlayingSound(buffer);
 		PlayingSound.add(playingSound);
 	}
 }
-enum SoundFile_Sounds
-{
+enum SoundFile_Sounds {
 	LASER_FIRED = 10,
 
 	WEAPON_HIT_DOOR = 27,
@@ -172,108 +166,93 @@ enum SoundFile_Sounds
 	OPPONENT_GOT_ORB = 86,
 	OPPONENT_HAS_SCORED = 87,
 
-
 	BIG_ENDLEVEL_EXPLOSION = EXPLODING_WALL,
 	TUNNEL_EXPLOSION = EXPLODING_WALL,
 	ROBOT_SUCKED_PLAYER = ROBOT_HIT_PLAYER, // Robot sucked energy from player.
 	WALL_CLOAK_ON = CLOAK_ON,
 	WALL_CLOAK_OFF = CLOAK_OFF,
 }
-//SoundFile_Sounds = freeze(SoundFile_Sounds);
+// SoundFile_Sounds = freeze(SoundFile_Sounds);
 
+class PlayingSound {
+	static rgPlayingSounds: PlayingSound[] = [];
 
-class PlayingSound
-{
+	static add(sound: PlayingSound) {
+		PlayingSound.rgPlayingSounds.push(sound);
+	}
+	static update() {
+		const rgPlayingSounds = PlayingSound.rgPlayingSounds;
+		for (let iPlayingSound = rgPlayingSounds.length; iPlayingSound--;) {
+			const playingSound = rgPlayingSounds[iPlayingSound];
+			if (!playingSound.update()) {
+				rgPlayingSounds.swapOut(iPlayingSound);
+			}
+		}
+	}
+
 	sourceNode: any;
 
-	constructor (buffer: AudioBuffer)
-	{
-		//this.buffer = buffer;
+	constructor(buffer: AudioBuffer) {
+		// this.buffer = buffer;
 		this.createSourceNode(buffer);
 		this.update();
 		this.sourceNode.start(0);
 	}
-	createSourceNode(buffer: AudioBuffer)
-	{
-		var sourceNode = this.sourceNode = _audio.createBufferSource();
+	createSourceNode(buffer: AudioBuffer) {
+		const sourceNode = this.sourceNode = _audio.createBufferSource();
 		sourceNode.buffer = buffer;
-		//sourceNode.playbackRate.value = .5;
+		// sourceNode.playbackRate.value = .5;
 		sourceNode.connect(_mainAudio);
 	}
-	update() { }
-
-
-
-	static rgPlayingSounds: PlayingSound[] = [];
-
-	static add(sound:PlayingSound)
-	{
-		PlayingSound.rgPlayingSounds.push(sound);
-	}
-	static update()
-	{
-		var rgPlayingSounds = PlayingSound.rgPlayingSounds;
-		for (var iPlayingSound = rgPlayingSounds.length; iPlayingSound--;)
-		{
-			var playingSound = rgPlayingSounds[iPlayingSound];
-			if (!playingSound.update())
-				rgPlayingSounds.splice(iPlayingSound, 1);
-		}
+	update() {
+		// do nothing
 	}
 }
-class PositionalSound extends PlayingSound
-{
+
+class PannerSound extends PlayingSound {
 	pannerNode: PannerNode;
-	pos: Vec3;
 
-	constructor (buffer: AudioBuffer, pos?: Vec3)
-	{
-		this.pos = pos;
-		super(buffer);
-	}
-	createSourceNode(buffer:AudioBuffer)
-	{
-		var sourceNode = this.sourceNode = _audio.createBufferSource();
+	createSourceNode(buffer: AudioBuffer) {
+		const sourceNode = this.sourceNode = _audio.createBufferSource();
 		sourceNode.buffer = buffer;
-		//sourceNode.playbackRate.value = .5;
+		// sourceNode.playbackRate.value = .5;
 
-		var pannerNode = this.pannerNode = _audio.createPanner();
-		pannerNode.panningModel = 'equalpower';
-		pannerNode.distanceModel = 'inverse';
+		const pannerNode = this.pannerNode = _audio.createPanner();
+		pannerNode.panningModel = "equalpower";
+		pannerNode.distanceModel = "inverse";
 		pannerNode.refDistance = 2;
 		pannerNode.rolloffFactor = .5;
 
 		sourceNode.connect(pannerNode);
 		pannerNode.connect(_mainAudio);
 	}
-	update()
-	{
-		var pos = this.pos;
+}
+class PositionalSound extends PannerSound {
+	constructor(buffer: AudioBuffer, public pos: Vec3) {
+		super(buffer);
+	}
+
+	update() {
+		const pos = this.pos;
 		this.pannerNode.setPosition(pos.x, pos.y, pos.z);
 		return this.sourceNode.playbackState !== this.sourceNode.FINISHED_STATE;
 	}
 }
-class ObjectSound extends PositionalSound
-{
-	obj: object;
-
-	constructor (buffer: AudioBuffer, obj: object)
-	{
-		this.obj = obj;
+class ItemSound extends PannerSound {
+	constructor(buffer: AudioBuffer, public obj: Item) {
 		super(buffer);
 	}
-	update()
-	{
-		var obj = this.obj;
 
-		var pos = obj.pos;
+	update() {
+		const obj = this.obj;
+
+		const pos = obj.pos;
 		this.pannerNode.setPosition(pos.x, pos.y, pos.z);
 
-		var pi = obj.mover;
-		if (pi)
-		{
-			var vel = pi.velocity;
-			//this.pannerNode.setVelocity(vel.x, vel.y, vel.z);
+		const pi = obj.mover;
+		if (pi) {
+			const vel = pi.velocity;
+			// this.pannerNode.setVelocity(vel.x, vel.y, vel.z);
 			this.pannerNode.setVelocity(0, 0, 0);
 		}
 

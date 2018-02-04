@@ -1,0 +1,29 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "indent": {
+            "options": [
+                "tabs"
+            ]
+        },
+        "member-access": [true, "no-public"],
+        "object-literal-sort-keys": false,
+        "max-line-length": false,
+        "no-reference": false,
+        "variable-name": [
+            "check-format",
+            "allow-leading-underscore",
+            "allow-pascal-case",
+            "ban-keywords"
+        ],
+        "max-classes-per-file": false,
+        "no-bitwise": false,
+        "no-console": true,        
+        "no-string-literal": false
+    },
+    "rulesDirectory": []
+}
