@@ -197,9 +197,7 @@ class PhysicsInfo implements IMover {
 			const move = this.velocity.scale(frameTime);
 			// const distance = move.len2();
 
-			if (obj.iCube < 0) {
-				throw new Error("NO CUBE");
-			}
+			assert(obj.iCube >= 0);
 
 			/*
 			if (!obj.cube.isPointInside(posNew))
@@ -232,6 +230,7 @@ class PhysicsInfo implements IMover {
 					const rgObjects = cube._rgObjects;
 					for (let iOther = rgObjects.length; iOther--;) {
 						const other: Item = rgObjects[iOther];
+						assert(other.cubeIndex >= 0);
 						const otherType = other.type;
 						if (otherType === type) {
 							if (iOther >= obj.cubeIndex) {
@@ -853,6 +852,8 @@ class Item {
 		}
 
 		if (cubeOld) {
+			assert(this.cubeIndex >= 0);
+			
 			const index = this.cubeIndex;
 			const objectOther = cubeOld._rgObjects.pop();
 			if (!objectOther) {

@@ -485,10 +485,21 @@ class Level {
 		for (let iObject = rgObjects.length; iObject--;) {
 			const object = rgObjects[iObject];
 			if (!object.update(time, frameTime)) {
+
+				for (var o of this.rgObjects)
+				assert(o.cubeIndex >= 0);
+					
 				object.link(null);
+
 				rgObjects.swapOut(iObject);
+
+				for (var o of this.rgObjects)
+				assert(o.cubeIndex >= 0);
 			}
 		}
+
+		for (var o of this.rgObjects)
+			assert(o.cubeIndex >= 0);
 
 		for (let iDoor = _rgActiveDoors.length; iDoor--;) {
 			const door = _rgActiveDoors[iDoor];
@@ -506,6 +517,9 @@ class Level {
 				rgObjects.swapOut(iObject);
 			}
 		}
+
+		for (var o of this.rgObjects)
+			assert(o.cubeIndex >= 0);
 	}
 }
 const _rgActiveDoors: Wall[] = [];
@@ -2107,7 +2121,7 @@ class Trigger {
 							case DoorStates.CLOAKING:
 								return;
 							case DoorStates.DECLOAKING:
-								const cloakingWall = assert(wall.cloakingWall);
+								const cloakingWall = notNull(wall.cloakingWall);
 								cloakingWall.reset(CLOAKING_WALL_TIME - cloakingWall.time);
 								break;
 							case DoorStates.CLOSED:

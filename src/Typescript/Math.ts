@@ -34,7 +34,12 @@ interface Math {
 	};
 })(Math, Array);
 
-function assert<T>(f: T | null | undefined): T {
+function assert(f:boolean) {
+	if (!f)
+		throw new Error("assertion failed");
+}
+
+function notNull<T>(f: T | null | undefined): T {
 	if (f == null) {
 		throw new Error("unexpected null|undefined");
 	}
@@ -64,7 +69,7 @@ Array.prototype.swapOut = function(i: number): any {
 	this.checkIndex(i);
 	const old = this[i];
 	const other: any = this.pop();
-	if (this.length) {
+	if (this.length && old !== other) {
 		this[i] = other;
 	}
 	return old;
@@ -599,7 +604,7 @@ class Mat3 {
 
 		return new Mat3(
 			new Vec3(1, 0, x),
-			new Vec3(0, 1, assert(y)),
+			new Vec3(0, 1, notNull(y)),
 			Vec3.Z,
 		);
 	}

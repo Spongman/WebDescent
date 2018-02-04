@@ -483,11 +483,12 @@ function onDataLoaded() {
 
 			const timeLast = _timeLast;
 			_timeLast = time;
-
-			const frameTime = (time - _timeLast);
-			if (!frameTime) {
+			if (!timeLast)
 				return;
-			}
+
+			const frameTime = (time - timeLast);
+			if (!frameTime)
+				return;
 
 			Keys.updateControls(frameTime);
 
@@ -682,6 +683,8 @@ function onDataLoaded() {
 							const rgObjects = cube._rgObjects;
 							for (let iObject = rgObjects.length; iObject--;) {
 								const object: Item = rgObjects[iObject];
+								assert(object.cubeIndex >= 0);
+
 								let objectLight = mapObjectLights[object._unique];
 								if (!objectLight) {
 									objectLight = mapObjectLights[object._unique] = object.getEmittedLight(time);

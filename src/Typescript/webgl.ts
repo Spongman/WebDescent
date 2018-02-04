@@ -35,7 +35,7 @@ function createProgram(name: string, attrs: string[], uniforms: string[]) {
 		$.get(`assets/shaders/${name}.vs.glsl`),
 		$.get(`assets/shaders/${name}.fs.glsl`),
 	).then((vsArgs: any[], fsArgs: any[]) => {
-		const program = assert(gl.createProgram());
+		const program = notNull(gl.createProgram());
 		gl.attachShader(program, compileShader(gl.VERTEX_SHADER, vsArgs[0] + "\n//" + name + ".vs"));
 		gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fsArgs[0] + "\n//" + name + ".fs"));
 		gl.linkProgram(program);
@@ -509,7 +509,7 @@ function pushOrientMatrix(matOrient: Mat3, pos?: Vec3) {
 }
 
 function popMatrix() {
-	updateMatModelView(matModelView = assert(rgMatrices.pop()));
+	updateMatModelView(matModelView = notNull(rgMatrices.pop()));
 	return matModelView;
 }
 
