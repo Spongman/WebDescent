@@ -47,7 +47,7 @@ class SoundFile {
 		}
 		const buffer = this.getBuffer();
 		const playingSound = new ItemSound(buffer, obj);
-		PlayingSound.add(playingSound);
+		PlayingSound.play(playingSound);
 	}
 	playSound(pos?: Vec3) {
 		if (!_audio) {
@@ -55,7 +55,7 @@ class SoundFile {
 		}
 		const buffer = this.getBuffer();
 		const playingSound = pos ? new PositionalSound(buffer, pos) : new PlayingSound(buffer);
-		PlayingSound.add(playingSound);
+		PlayingSound.play(playingSound);
 	}
 }
 enum SoundFile_Sounds {
@@ -177,8 +177,9 @@ enum SoundFile_Sounds {
 class PlayingSound {
 	static rgPlayingSounds: PlayingSound[] = [];
 
-	static add(sound: PlayingSound) {
+	static play(sound: PlayingSound) {
 		PlayingSound.rgPlayingSounds.push(sound);
+		sound.play();
 	}
 	static update() {
 		const rgPlayingSounds = PlayingSound.rgPlayingSounds;
@@ -192,18 +193,22 @@ class PlayingSound {
 
 	sourceNode: any;
 
-	constructor(buffer: AudioBuffer) {
-		// this.buffer = buffer;
-		this.createSourceNode(buffer);
+	constructor(public buffer: AudioBuffer) {
+	}
+
+	play() {
+		this.createSourceNode(this.buffer);
 		this.update();
 		this.sourceNode.start(0);
 	}
+
 	createSourceNode(buffer: AudioBuffer) {
 		const sourceNode = this.sourceNode = _audio.createBufferSource();
 		sourceNode.buffer = buffer;
 		// sourceNode.playbackRate.value = .5;
 		sourceNode.connect(_mainAudio);
 	}
+
 	update() {
 		// do nothing
 	}
@@ -230,6 +235,7 @@ class PannerSound extends PlayingSound {
 class PositionalSound extends PannerSound {
 	constructor(buffer: AudioBuffer, public pos: Vec3) {
 		super(buffer);
+		notNull(this.pos);
 	}
 
 	update() {
@@ -241,6 +247,7 @@ class PositionalSound extends PannerSound {
 class ItemSound extends PannerSound {
 	constructor(buffer: AudioBuffer, public obj: Item) {
 		super(buffer);
+		notNull(this.obj);
 	}
 
 	update() {
@@ -249,12 +256,14 @@ class ItemSound extends PannerSound {
 		const pos = obj.pos;
 		this.pannerNode.setPosition(pos.x, pos.y, pos.z);
 
+		/*
 		const pi = obj.mover;
 		if (pi) {
 			const vel = pi.velocity;
 			// this.pannerNode.setVelocity(vel.x, vel.y, vel.z);
 			this.pannerNode.setVelocity(0, 0, 0);
 		}
+		*/
 
 		return this.sourceNode.playbackState !== this.sourceNode.FINISHED_STATE;
 	}
