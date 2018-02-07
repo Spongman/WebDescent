@@ -1,4 +1,4 @@
-﻿/// <reference path="DataView.ts" />
+/// <reference path="DataView.ts" />
 /// <reference path="DataStream.ts" />
 /// <reference path="Math.ts" />
 /// <reference path="webgl.ts" />
@@ -133,6 +133,8 @@ class PhysicsInfo implements IMover {
 		return this;
 	}
 	move(obj: Item, time: number, frameTime: number) {
+		assert(!obj.isDead());
+
 		if (this.drag) {
 			const tau = this.mass * 2.5 * this.drag;
 			const dragScale = Math.exp(-frameTime / tau);
@@ -230,7 +232,10 @@ class PhysicsInfo implements IMover {
 					const rgObjects = cube._rgObjects;
 					for (let iOther = rgObjects.length; iOther--;) {
 						const other: Item = rgObjects[iOther];
-						assert(other.cubeIndex >= 0);
+						if (other.isDead()) {
+							continue;
+						}	// item is dead
+
 						const otherType = other.type;
 						if (otherType === type) {
 							if (iOther >= obj.cubeIndex) {
@@ -627,7 +632,7 @@ class Item {
 	info: any;
 	parent: Item;
 
-	mapCollisionHandlers: ((time: number, pos: Vec3, other: Item) => Item|null)[];
+	mapCollisionHandlers: Array<(time: number, pos: Vec3, other: Item) => Item|null>;
 
 	controlType: ControlTypes;
 	movementType: MovementTypes;
@@ -852,8 +857,8 @@ class Item {
 		}
 
 		if (cubeOld) {
-			assert(this.cubeIndex >= 0);
-			
+			assert(!this.isDead());
+
 			const index = this.cubeIndex;
 			const objectOther = cubeOld._rgObjects.pop();
 			if (!objectOther) {
@@ -1231,7 +1236,7 @@ class Item {
 	collideWeaponWeapon(time: number, pos: Vec3, other: Item): Item|null { return null; }
 
 	isDead(): boolean {
-		return false;
+		return this.cubeIndex < 0;
 	}
 
 }

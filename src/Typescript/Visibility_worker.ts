@@ -7,11 +7,11 @@ let _level: Level;
 //let LIGHT_DISTANCE_THRESHOLD: number;
 
 interface Vec3 {
-	__proto__: Vec3
+	__proto__: Vec3;
 }
 
 interface Triangle {
-	__proto__: Triangle
+	__proto__: Triangle;
 }
 
 self.onmessage = (event) => {

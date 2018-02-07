@@ -232,7 +232,7 @@ function initShaders() {
 			programBillboardX.bufferVertexPosition = createBuffer(Array.prototype.concat.apply([], rgBillboardVertexPositions.map((v) => v.flatten())), 2);
 			loadAttribBuffer(programBillboardX.aVertexPosition, programBillboardX.bufferVertexPosition);
 		}),
-	).done(function () {
+	).done(function() {
 		rgPrograms = $.makeArray(arguments);
 	});
 }

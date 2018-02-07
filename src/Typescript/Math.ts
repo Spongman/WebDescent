@@ -34,9 +34,10 @@ interface Math {
 	};
 })(Math, Array);
 
-function assert(f:boolean) {
-	if (!f)
+function assert(f: boolean) {
+	if (!f) {
 		throw new Error("assertion failed");
+	}
 }
 
 function notNull<T>(f: T | null | undefined): T {
@@ -54,12 +55,12 @@ Array.prototype.mapConcat = function(callback: any, thisArg: any): any[] {
 	}
 	return rg;
 };
-Array.prototype.checkIndex = function (i: number) {
+Array.prototype.checkIndex = function(i: number) {
 	if (i < 0 || i >= this.length) {
 		throw new Error("index out of range: " + i);
 	}
 };
-Array.prototype.removeAt = function (i: number) {
+Array.prototype.removeAt = function(i: number) {
 	this.checkIndex(i);
 	const old = this[i];
 	this.splice(i, 1);

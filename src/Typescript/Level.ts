@@ -485,21 +485,12 @@ class Level {
 		for (let iObject = rgObjects.length; iObject--;) {
 			const object = rgObjects[iObject];
 			if (!object.update(time, frameTime)) {
-
-				for (var o of this.rgObjects)
-				assert(o.cubeIndex >= 0);
-					
 				object.link(null);
-
 				rgObjects.swapOut(iObject);
-
-				for (var o of this.rgObjects)
-				assert(o.cubeIndex >= 0);
 			}
 		}
 
-		for (var o of this.rgObjects)
-			assert(o.cubeIndex >= 0);
+		this.cleanObjects();
 
 		for (let iDoor = _rgActiveDoors.length; iDoor--;) {
 			const door = _rgActiveDoors[iDoor];
@@ -513,13 +504,10 @@ class Level {
 		for (let iObject = rgObjects.length; iObject--;) {
 			const object = rgObjects[iObject];
 			if (object.isDead()) {
-				object.link(null);
+				//object.link(null);
 				rgObjects.swapOut(iObject);
 			}
 		}
-
-		for (var o of this.rgObjects)
-			assert(o.cubeIndex >= 0);
 	}
 }
 const _rgActiveDoors: Wall[] = [];
@@ -1143,7 +1131,7 @@ class Side {
 
 	_unique: string;
 
-	cubeIndex: { iCube:number, iSide: number };
+	cubeIndex: { iCube: number, iSide: number };
 
 	constructor(public cube: Cube, public index: number, public neighbor: Cube, public vertices: Vec3[]) {
 		this._unique = (__unique++).toString();

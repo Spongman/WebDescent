@@ -202,7 +202,7 @@ interface DataStream {
 	[index: string]: any;
 }
 
-DataView.prototype.slice = function (offset: number, length: number) {
+DataView.prototype.slice = function(offset: number, length: number) {
 	if (!(offset >= 0 && offset + length <= this.byteLength)) {
 		throw new Error("Invalid index: " + offset);
 	}
