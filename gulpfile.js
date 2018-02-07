@@ -2,27 +2,12 @@ const gulp = require('gulp');
 const util = require('gulp-util');
 const ts = require('gulp-typescript');
 const watch = require('gulp-watch');
-const empty = require('gulp-empty');
-const browserify = require('browserify');
-const source = require('vinyl-source-stream');
-//const less = require('gulp-less');
-const connect = require('gulp-connect');
-//const uglify = require('gulp-uglify');
 const uglifyes = require('uglify-es');
 const composer = require('gulp-uglify/composer');
 const uglify = composer(uglifyes, console);
-
 const sourcemaps = require('gulp-sourcemaps');
-const buffer = require('vinyl-buffer');
-//const uglifycss = require('gulp-uglifycss');
 const clean = require('gulp-clean');
-//const tsModuleBundler = require('gulp-typescript-module-bundler');
-//const rollup = require('gulp-rollup');
-//const browserify = require('gulp-browserify');
-const tsify = require('tsify');
-const rename = require('gulp-rename');
 const browserSync = require('browser-sync');
-const gulpsync = require('gulp-sync')(gulp);
 const config = {
 	production: !!util.env.production,
 };
