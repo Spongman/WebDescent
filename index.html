@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>WebDescent</title>
+	<link href="index.css" rel="stylesheet" />
+
+	<script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+
+	<script type="text/javascript">
+
+		function add(s)
+		{
+			var e = document.createElement("script");
+			//e.src = s + ".min.js";
+			e.src = s + ".js";
+			e.type = "text/javascript";
+			e.async = false;
+			e.sync = true;
+			(document.head || document.getElementsByTagName('head')[0]).appendChild(e);
+		}
+
+		var scripts = [
+			"jquery.ajax-progress",
+			"game-shim",
+			"index",
+		];
+
+		for (var i = 0; i < scripts.length; ++i)
+			add(scripts[i]);
+
+	</script>
+
+</head>
+<body>
+	<!--
+	<pre id="divDebug" style="background:  white; color: black;"></pre>
+	-->
+	<canvas id="canvas"></canvas>
+
+	<div id="loader">
+
+		<h1>WebDescent <span style="font-size: 50%;">(alpha)</span></h1>
+		<p>&copy; Piers Haken 2013</p>
+
+		<p>
+			Based on the fantastic
+			<a href="http://en.wikipedia.org/wiki/Descent_II">Descent II</a> developed by <a href="http://en.wikipedia.org/wiki/Parallax_Software">Parallax Software Corp.</a>, published by <a href="http://www.interplay.com/">Interplay Productions, Inc.</a>
+		</p>
+
+		<p>
+			<a href="http://store.steampowered.com/app/273580/">Descent II on Steam</a>
+		</p>
+
+		<div style="text-align: left">
+
+			<label for="#prog1">d2demo.pig</label>
+			<div class="prog" id="prog1">
+				<div></div>
+			</div>
+
+			<label for="#prog2">d2demo.hog</label>
+			<div class="prog" id="prog2">
+				<div></div>
+			</div>
+
+			<label for="#prog3">d2demo.ham</label>
+			<div class="prog" id="prog3">
+				<div></div>
+			</div>
+
+		</div>
+
+		<button id="start" disabled="disabled">Wait</button>
+	</div>
+</body>
+</html>
