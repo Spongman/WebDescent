@@ -5,5 +5,5 @@ WebGL version of Descent II demo
 
 [![Screenshot][2]][1]
 
-  [1]: http://codewithoutborders.com/WebDescent/
+  [1]: https://spongman.github.io/WebDescent/
   [2]: https://github.com/piersh/WebDescent/wiki/Screenshot.jpg (Live Demo)
